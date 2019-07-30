@@ -1,0 +1,132 @@
+  用户表
+    用户名 密码 openId 已学题目 每日需刷题数量 答题时长 练习天数 创建练习次数 答题量
+  题目表
+    题目内容 选项a、b、c、d 答案 解析 做错数量 做对数量 时间轴 要素轴
+  用户成绩表
+    用户id 分数
+  题目评论表
+    题目id 用户id 评论内容
+drop table if exists user;
+drop table if exists setting;
+drop table if exists topic;
+drop table if exists comment;
+drop table if exists collect;
+drop table if exists wrong_topic;
+drop table if exists done_topic;
+
+CREATE TABLE `user` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `user_name` varchar(50) DEFAULT '' COMMENT '用户名',
+  `open_id` varchar(50) DEFAULT '' COMMENT '开放平台id',
+  `has_learn_num` int(10) DEFAULT 0 COMMENT '已学题目',
+  `practice_days` int(10) DEFAULT 0 COMMENT '练习天数',
+  `practice_time` int(10) DEFAULT 0 COMMENT '创建练习次数',
+  `answer_num` int(10) DEFAULT 0 COMMENT '答题量',
+  `wrong_num` int(10) DEFAULT 0 COMMENT '做错数量',
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+  `flag` tinyint(4) NOT NULL DEFAULT '0' COMMENT '0: 默认 1: 逻辑删除',
+  PRIMARY KEY (`id`),
+  KEY `idx_open_id` (`open_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 comment '用户表';
+
+#目前只放用户要素轴的选择
+CREATE TABLE `setting` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `open_id` varchar(50) DEFAULT '' COMMENT '开放平台id',
+  `region` varchar(20) DEFAULT '' COMMENT '地域',
+  `exam_type` varchar(40) DEFAULT '' COMMENT '考试类型：公务员考：EXAM_TYPE_CIVIL 事业单位考：EXAM_TYPE_INSTITUTION',
+  `element_type_one` varchar(30) DEFAULT '' COMMENT '要素轴类型第一层',
+  `element_type_two` varchar(30) DEFAULT '' COMMENT '要素轴类型第二层',
+  `daily_need_num` int(10) DEFAULT 0 COMMENT '每日需刷题数量',
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+  `flag` tinyint(4) NOT NULL DEFAULT '0' COMMENT '0: 默认 1: 逻辑删除',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 comment '用户设置表';
+
+CREATE TABLE `topic` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `topic_name` varchar(500) DEFAULT '' COMMENT '题目名字',
+  `option_a` varchar(200) DEFAULT '' COMMENT '选项A',
+  `option_b` varchar(200) DEFAULT '' COMMENT '选项B',
+  `option_c` varchar(200) DEFAULT '' COMMENT '选项C',
+  `option_d` varchar(200) DEFAULT '' COMMENT '选项D',
+  `answer` varchar(3) DEFAULT '' COMMENT '答案',
+  `topic_analysis` varchar(500) DEFAULT '' COMMENT '题目解析',
+  `wrong_num` int(10) DEFAULT 0 COMMENT '做错数量',
+  `right_num` int(10) DEFAULT 0 COMMENT '做对数量',
+  `year` int(10) DEFAULT 0 COMMENT '所属年份',
+  `region` varchar(20) DEFAULT '' COMMENT '地域',
+  `photo` varchar(50) DEFAULT '' COMMENT '图片',
+  `exam_type` varchar(20) DEFAULT '' COMMENT '考试类型：公务员考：EXAM_TYPE_CIVIL 事业单位考：EXAM_TYPE_INSTITUTION',
+  `element_type_one` varchar(30) DEFAULT '' COMMENT '要素轴类型第一层',
+  `element_type_two` varchar(30) DEFAULT '' COMMENT '要素轴类型第二层',
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+  `flag` tinyint(4) NOT NULL DEFAULT '0' COMMENT '0: 默认 1: 逻辑删除',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 comment '题目表';
+insert into topic (topic_name,option_a,option_b,option_c,option_d,answer,topic_analysis,year,region,exam_type,element_type_one,element_type_two) values
+('第一题','a','b','c','d','答案a','解析a',2019,'SZ','GWY','one','1'),
+('第二题','a2','b2','c2','d2','答案a','解析a',2019,'SZ','GWY','one','2');
+
+CREATE TABLE `comment` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `topic_id` int(10) DEFAULT 0 COMMENT '题目id',
+   `open_id` varchar(50) DEFAULT '' COMMENT '开放平台id',
+  `comment_content` varchar(300) DEFAULT '' COMMENT '评论内容',
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+  `flag` tinyint(4) NOT NULL DEFAULT '0' COMMENT '0: 默认 1: 逻辑删除',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 comment '用户评论表';
+
+CREATE TABLE `collect` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+   `open_id` varchar(50) DEFAULT '' COMMENT '开放平台id',
+  `topic_id` int(10) DEFAULT 0 COMMENT '题目id',
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+  `flag` tinyint(4) NOT NULL DEFAULT '0' COMMENT '0: 默认 1: 逻辑删除',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `open_id_topic_id_idx1` (`open_id`,`topic_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 comment '用户收藏题目表';
+
+ CREATE TABLE `wrong_topic` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+   `open_id` varchar(50) DEFAULT '' COMMENT '开放平台id',
+  `topic_id` int(10) DEFAULT 0 COMMENT '题目id',
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+  `flag` tinyint(4) NOT NULL DEFAULT '0' COMMENT '0: 默认 1: 逻辑删除',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `open_id_topic_id_idx1` (`open_id`,`topic_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 comment '用户错误题目表';
+
+
+ CREATE TABLE `done_topic` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+   `open_id` varchar(50) DEFAULT '' COMMENT '开放平台id',
+  `topic_id` int(10) DEFAULT 0 COMMENT '题目id',
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+  `flag` tinyint(4) NOT NULL DEFAULT '0' COMMENT '0: 默认 1: 逻辑删除',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `open_id_topic_id_idx1` (`open_id`,`topic_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 comment '用户已做题目表';
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

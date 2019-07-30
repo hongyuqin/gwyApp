@@ -1,0 +1,236 @@
+tips:
+  1.除了第一个接口，其他接口都要带上accessToken用作鉴权
+gg 1.首页
+url:/home
+请求方式：GET
+请求参数：accessToken=xxx
+返回参数：
+{
+    "code": 200,
+    "msg": "",
+    "data": {
+    	"left_days":,//考试剩余天数
+    	"daily_need_num":,//每日需刷题数量 今日做题
+    	"today_practice_num":,//今日刷题数量 存redis
+    	"has_learn_num":,//已学数量
+    	"wrong_num":10,//做错数量 需复习数量
+    	"region":,//地区
+    	"total_topic_num":,//总题目数
+    	"exam_type":xx,//考试类型
+    	"element_type_one":,//要素轴类型第一层
+    	"element_type_two":,//要素轴类型第二层
+    }
+}
+
+gg* 2.开始答题/下一题
+功能：把今天答得题存下来，有个今天刷题 需要展示
+url:/nextTopic?accessToken=xxx&is_begin=true&current_index=10&operate=last
+请求方式：GET
+请求参数：
+    is_begin:true 是否开始答题(是的话，要初始化一个redis列表)
+    current_index:10 当前所在redis列表位置
+    operate:last last上一题；next下一题
+返回参数：
+{
+    "code": 200,//500时 data为提示框内容
+    "msg": "",
+    "data":{
+        "index":1,
+        "topic_id":xx,
+    	"topic_name":"",
+    	"option_a":"",
+    	"option_b":"",
+    	"option_c":"",
+    	"option_d":"",
+    	"collect":true //是否被收藏
+    }
+}
+
+gg 3.下一道错题
+功能：做下一道错题
+url:/nextWrongTopic?accessToken=xxx&isBegin=true&currentIndex=10&operate=last
+请求方式：GET
+请求参数：
+    isBegin:true 是否开始答题(是的话，要初始化一个redis列表)
+    currentIndex:10 当前所在redis列表位置
+    operate:last last上一题；next下一题
+返回参数：
+{
+    "code": 200,
+    "msg": "",
+    "data":{
+        "index":1,
+        "topic_id":xx,
+    	"topic_name":"",
+    	"option_a":"",
+    	"option_b":"",
+    	"option_c":"",
+    	"option_d":"",
+    	"collect":true //是否被收藏
+    }
+}
+
+gg 4.下一道收藏的题
+url:/nextCollect?accessToken=xxx&isBegin=true&currentIndex=10&operate=last
+请求方式：GET
+请求参数：
+    isBegin:true 是否开始答题(是的话，要初始化一个redis列表)
+    currentIndex:10 当前所在redis列表位置
+    operate:last last上一题；next下一题
+返回参数：
+{
+    "code": 200,
+    "msg": "",
+    "data":{
+        "index":1,
+        "topic_id":xx,
+    	"topic_name":"",
+    	"option_a":"",
+    	"option_b":"",
+    	"option_c":"",
+    	"option_d":"",
+    	"collect":true,//是否被收藏
+    }
+}
+
+gg 5.提交答案
+功能：提交答案，显示正确答案和解析，还有正不正确
+url:/answer?accessToken=xxx&topic_id=xx&my_answer=C
+请求方式:GET
+请求参数：
+	topic_id 题目id
+	my_answer 我的答案
+返回参数：
+{
+    "code": 200,
+    "msg": "",
+    "data":{
+        "my_answer":"C",//我的答案
+    	"right":true,//答案正不正确
+    	"answer":"D",//答案
+    	"topic_analysis":"",//解析
+    	"wrong_num":,//做错数量
+    	"right_num"://作对数量
+    }
+}
+
+6.设置要素轴
+功能：
+url:/setting?accessToken=xxx&exam_type=xx&element_type_one=xx&element_type_two=xx
+请求方式：GET
+返回参数：
+{
+    "code": 200,
+    "msg": ""
+}
+
+gg 7.获取计划
+功能：点击修改计划，获取计划的信息
+url:/getPlan?accessToken=xxx&
+请求方式：GET
+返回参数：
+{
+    "code": 200,
+    "msg": "",
+    "data":{
+    	"region":"",//地域选择：国家、深圳
+        "exam_type":"",//参加考试类型：公务员考、事业单位考
+        "daily_need_num":,//每日需刷题数量
+        //地域选择 考试类型的值和type先在后台写死
+    }
+}
+
+gg 6.修改计划
+功能：通过此按钮调整——地域的选择（如国家，深圳，等后期再添加其他地方的题目）、参加考试的类型（如公务员考、事业单位考试）、今日刷题的数量。页面设计可以参考百词斩。
+url:/plan?accessToken=xxx&region=xx&exam_type=xx&daily_need_num=xx
+请求方式：GET
+请求参数：
+
+返回参数：
+{
+    "code": 200,
+    "msg": ""
+}
+
+gg 8.收藏题目
+功能：用户收藏题目后，记录到后台的收藏表
+url:/collect?accessToken=xxx&topic_id=xx
+请求方式：GET
+请求参数：topic_id=xx
+返回参数：
+{
+    "code": 200,
+    "msg": ""
+}
+
+gg 9.取消收藏
+url:/cancelCollect?accessToken=xxx&topic_id=xx
+请求方式：GET
+请求参数：topic_id=xx
+返回参数：
+{
+    "code": 200,
+    "msg": ""
+}
+
+10.查看解析
+url:/getAnalysis?accessToken=xxx&topic_id=xx
+请求方式:GET
+请求参数：
+	topic_id 题目id
+	my_answer 我的答案
+返回参数：
+{
+    "code": 200,
+    "msg": "",
+    "data":{
+    	"answer":"D",//答案
+    	"topic_analysis":"",//解析
+    	"wrong_num":,//做错数量
+    	"right_num"://作对数量
+    	"year":2019//所属年份
+    	"element_arr":["",""] //所属模块
+    }
+}
+
+11.获取用户基本信息
+url:/getBaseInfo?accessToken=xx
+请求方式:GET
+请求参数：
+返回参数：
+{
+    "code": 200,
+    "msg": "",
+    "data":{
+    	"to_learn_num":10,//需新学
+        "wrong_num":10,//需复习
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
