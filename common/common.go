@@ -29,3 +29,30 @@ const (
 	OPERATE_LAST = "last"
 	OPERATE_NEXT = "next"
 )
+
+/**
+事业单位考试	Institution examination	IE
+判断推理	Judgment reasoning	JR
+资料分析	date analyzing	DA
+常识判断	Common sense judgment	CSJ
+公共基础	Public foundation	PF
+
+公务员考试	Civil Service Exam	CSE
+言语理解与表达	Speech understanding and expression	SUAE
+数量关系	Quantity relationship	QR
+*/
+const (
+	INSTITUTION_EXAMINATION = "IE"
+	JUDGMENT_REASONING      = "JR"
+	DATA_ANALYZING          = "DA"
+	COMMON_SENSE_JUDGMENT   = "CSJ"
+	PUBLIC_FOUNDATION       = "PF"
+
+	CIVIL_SERVICE_EXAM                  = "CSE"
+	SPEECH_UNDERSTANDING_AND_EXPRESSION = "SUAE"
+	QUANTITY_RELATIONSHIP               = "QR"
+
+	//地区
+	SZ = "SZ" //深圳
+	CN = "CN" //国家
+)

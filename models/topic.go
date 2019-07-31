@@ -1,7 +1,10 @@
 package models
 
+import "github.com/sirupsen/logrus"
+
 type Topic struct {
 	Model
+	TopicNo        string `json:"topic_no"`
 	TopicName      string `json:"topic_name"`
 	Photo          string `json:"photo"`
 	OptionA        string `json:"option_a"`
@@ -13,6 +16,7 @@ type Topic struct {
 	WrongNum       int    `json:"wrong_num"`
 	RightNum       int    `json:"right_num"`
 	Region         string `json:"region"`
+	Year           int    `json:"year"`
 	ExamType       string `json:"exam_type"`
 	ElementTypeOne string `json:"element_type_one"`
 	ElementTypeTwo string `json:"element_type_two"`
@@ -64,6 +68,20 @@ func UpdateTopic(topic *Topic) error {
 		data["right_num"] = topic.RightNum
 	}
 	if err := db.Model(&Topic{}).Where("id = ? AND flag = 0 ", topic.ID).Updates(data).Error; err != nil {
+		return err
+	}
+	return nil
+}
+func UpdateTopicByTopicNo(topic *Topic) error {
+	logrus.Info("UpdateTopicByTopicNo  :", topic.TopicNo)
+	data := make(map[string]interface{})
+	if topic.Answer != "" {
+		data["answer"] = topic.Answer
+	}
+	if topic.TopicAnalysis != "" {
+		data["topic_analysis"] = topic.TopicAnalysis
+	}
+	if err := db.Model(&Topic{}).Where("topic_no = ? AND flag = 0 ", topic.TopicNo).Updates(data).Error; err != nil {
 		return err
 	}
 	return nil

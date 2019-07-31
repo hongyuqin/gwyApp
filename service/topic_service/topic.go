@@ -45,11 +45,9 @@ func getBeginTopic(req *TopicReq) (*Topic, error) {
 	}
 	region := setting.Region
 	elementTypeOne := setting.ElementTypeOne
-	elementTypeTwo := setting.ElementTypeTwo
 	topics, err := models.GetTopics(&models.Topic{
 		Region:         region,
 		ElementTypeOne: elementTypeOne,
-		ElementTypeTwo: elementTypeTwo,
 	})
 	if err != nil {
 		logrus.Error("GetTopics error :", err)

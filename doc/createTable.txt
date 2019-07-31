@@ -47,6 +47,7 @@ CREATE TABLE `setting` (
 
 CREATE TABLE `topic` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `topic_no` varchar(50) DEFAULT '' COMMENT '题目编号',
   `topic_name` varchar(500) DEFAULT '' COMMENT '题目名字',
   `option_a` varchar(200) DEFAULT '' COMMENT '选项A',
   `option_b` varchar(200) DEFAULT '' COMMENT '选项B',
@@ -58,7 +59,7 @@ CREATE TABLE `topic` (
   `right_num` int(10) DEFAULT 0 COMMENT '做对数量',
   `year` int(10) DEFAULT 0 COMMENT '所属年份',
   `region` varchar(20) DEFAULT '' COMMENT '地域',
-  `photo` varchar(50) DEFAULT '' COMMENT '图片',
+  `photo` varchar(100) DEFAULT '' COMMENT '图片',
   `exam_type` varchar(20) DEFAULT '' COMMENT '考试类型：公务员考：EXAM_TYPE_CIVIL 事业单位考：EXAM_TYPE_INSTITUTION',
   `element_type_one` varchar(30) DEFAULT '' COMMENT '要素轴类型第一层',
   `element_type_two` varchar(30) DEFAULT '' COMMENT '要素轴类型第二层',
@@ -67,9 +68,7 @@ CREATE TABLE `topic` (
   `flag` tinyint(4) NOT NULL DEFAULT '0' COMMENT '0: 默认 1: 逻辑删除',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 comment '题目表';
-insert into topic (topic_name,option_a,option_b,option_c,option_d,answer,topic_analysis,year,region,exam_type,element_type_one,element_type_two) values
-('第一题','a','b','c','d','答案a','解析a',2019,'SZ','GWY','one','1'),
-('第二题','a2','b2','c2','d2','答案a','解析a',2019,'SZ','GWY','one','2');
+
 
 CREATE TABLE `comment` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,

@@ -9,8 +9,9 @@ func InitRouter() *gin.Engine {
 	r := gin.New()
 	//测试接口
 	/*r.GET("/article", api.GetArticle)
-	r.POST("/upload", api.UploadFile)
+
 	r.GET("/getUser", api.GetUser)*/
+	r.POST("/upload", api.UploadFile)
 	r.GET("/getAccessToken", api.GetAccessToken)
 	//1.首页
 	r.GET("/home", api.HomePage)
