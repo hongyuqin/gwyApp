@@ -6,11 +6,10 @@ import (
 	"gwyApp/common"
 	"gwyApp/models"
 	"gwyApp/pkg/gredis"
-	"strconv"
 )
 
 func getBeginWrongTopic(req *TopicReq) (*Topic, error) {
-	wrongTopics, err := models.GetWrongTopics(req.AccessToken)
+	wrongTopicsId, err := models.GetWrongTopicsId(req.AccessToken)
 	if err != nil {
 		logrus.Error("GetWrongTopics error :", err)
 		return nil, err
@@ -20,16 +19,14 @@ func getBeginWrongTopic(req *TopicReq) (*Topic, error) {
 		logrus.Error("delete error :", err)
 		return nil, err
 	}
-	if len(wrongTopics) == 0 {
+	if len(wrongTopicsId) == 0 {
 		logrus.Error("no wrong topics")
 		return nil, errors.New("当前无错题")
 	}
-	for _, wrongTopic := range wrongTopics {
-		_, err = gredis.RPush(common.WRONG_TOPIC_LIST+req.AccessToken, strconv.Itoa(wrongTopic.TopicId))
-		if err != nil {
-			logrus.Error("rpush redis error :", err)
-			return nil, err
-		}
+	_, err = gredis.RPush(common.WRONG_TOPIC_LIST+req.AccessToken, wrongTopicsId...)
+	if err != nil {
+		logrus.Error("lpush redis error :", err)
+		return nil, err
 	}
 	return getTopicByIndex(common.WRONG_TOPIC_LIST, req.AccessToken, 0)
 }
@@ -38,10 +35,10 @@ func NextWrongTopic(req *TopicReq) (*Topic, error) {
 		return getBeginWrongTopic(req)
 	}
 	if req.Operate == common.OPERATE_LAST {
-		return getTopicByIndex(common.COLLECT_LIST, req.AccessToken, req.CurrentIndex-1)
+		return getTopicByIndex(common.WRONG_TOPIC_LIST, req.AccessToken, req.CurrentIndex-1)
 	}
 	if req.Operate == common.OPERATE_NEXT {
-		return getTopicByIndex(common.COLLECT_LIST, req.AccessToken, req.CurrentIndex+1)
+		return getTopicByIndex(common.WRONG_TOPIC_LIST, req.AccessToken, req.CurrentIndex+1)
 	}
 	return nil, errors.New("no topic")
 

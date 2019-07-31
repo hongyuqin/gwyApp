@@ -1,6 +1,9 @@
 package models
 
-import "github.com/sirupsen/logrus"
+import (
+	"encoding/json"
+	"github.com/sirupsen/logrus"
+)
 
 type Topic struct {
 	Model
@@ -22,6 +25,13 @@ type Topic struct {
 	ElementTypeTwo string `json:"element_type_two"`
 }
 
+func (this *Topic) String() string {
+	bytes, err := json.Marshal(this)
+	if err != nil {
+		return "marshal error"
+	}
+	return string(bytes)
+}
 func AddTopic(topic *Topic) error {
 	if err := db.Create(&topic).Error; err != nil {
 		return err
@@ -59,6 +69,20 @@ func GetTopics(topic *Topic) ([]Topic, error) {
 	}
 	return topics, nil
 }
+
+func GetTopicsId(topic *Topic) ([]int, error) {
+	var topicIds []int
+	data := make(map[string]interface{})
+	if topic.ElementTypeOne != "" {
+		data["element_type_one"] = topic.ElementTypeOne
+	}
+	if topic.ElementTypeTwo != "" {
+		data["element_type_two"] = topic.ElementTypeTwo
+	}
+	db.Model(&Topic{}).Where(data).Pluck("id", &topicIds)
+	return topicIds, nil
+}
+
 func UpdateTopic(topic *Topic) error {
 	data := make(map[string]interface{})
 	if topic.WrongNum > 0 {

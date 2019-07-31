@@ -30,18 +30,10 @@ func DelDoneTopic(id int) error {
 	}
 	return nil
 }
-
-func GetDoneTopics(openId string) ([]DoneTopic, error) {
-	var (
-		topics []DoneTopic
-		err    error
-	)
+func GetDoneTopicsId(openId string) ([]int, error) {
+	var topicIds []int
 	data := make(map[string]interface{})
 	data["open_id"] = openId
-
-	err = db.Where(data).Find(&topics).Error
-	if err != nil {
-		return nil, err
-	}
-	return topics, nil
+	db.Model(&DoneTopic{}).Where(data).Pluck("topic_id", topicIds)
+	return topicIds, nil
 }

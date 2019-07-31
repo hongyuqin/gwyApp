@@ -7,7 +7,6 @@ import (
 	"gwyApp/models"
 	"gwyApp/pkg/gredis"
 	"gwyApp/pkg/util"
-	"strconv"
 )
 
 type Topic struct {
@@ -30,10 +29,12 @@ type AnswerResp struct {
 }
 
 type Analysis struct {
-	Answer        string `json:"answer"`
-	TopicAnalysis string `json:"topic_analysis"`
-	WrongNum      int    `json:"wrong_num"`
-	RightNum      int    `json:"right_num"`
+	Answer        string   `json:"answer"`
+	TopicAnalysis string   `json:"topic_analysis"`
+	WrongNum      int      `json:"wrong_num"`
+	RightNum      int      `json:"right_num"`
+	Year          int      `json:"year"`
+	ElementArr    []string `json:"element_arr"`
 }
 
 func getBeginTopic(req *TopicReq) (*Topic, error) {
@@ -45,7 +46,7 @@ func getBeginTopic(req *TopicReq) (*Topic, error) {
 	}
 	region := setting.Region
 	elementTypeOne := setting.ElementTypeOne
-	topics, err := models.GetTopics(&models.Topic{
+	topicsId, err := models.GetTopicsId(&models.Topic{
 		Region:         region,
 		ElementTypeOne: elementTypeOne,
 	})
@@ -54,30 +55,29 @@ func getBeginTopic(req *TopicReq) (*Topic, error) {
 		return nil, err
 	}
 	topicIdCol := make([]int, 0)
-	for _, topic := range topics {
-		topicIdCol = append(topicIdCol, topic.ID)
-		allTopicsMap[topic.ID] = struct{}{}
+	for _, topicId := range topicsId {
+		topicIdCol = append(topicIdCol, topicId)
+		allTopicsMap[topicId] = struct{}{}
 	}
 	//2.拿到已做题目的全部id
-	doneTopics, err := models.GetDoneTopics(req.AccessToken)
+	doneTopicsId, err := models.GetDoneTopicsId(req.AccessToken)
 	if err != nil {
 		logrus.Error("GetDoneTopics error :", err)
 		return nil, err
 	}
-	for _, topic := range doneTopics {
-		delete(allTopicsMap, topic.TopicId)
+	for _, topicId := range doneTopicsId {
+		delete(allTopicsMap, topicId)
 	}
 	_, err = gredis.Delete(common.TOPIC_LIST + req.AccessToken)
 	if err != nil {
 		logrus.Error("delete error :", err)
 		return nil, err
 	}
-	for topicId := range allTopicsMap {
-		_, err = gredis.RPush(common.TOPIC_LIST+req.AccessToken, strconv.Itoa(topicId))
-		if err != nil {
-			logrus.Error("lpush redis error :", err)
-			return nil, err
-		}
+	list := common.GetMapKeys(allTopicsMap)
+	_, err = gredis.RPush(common.TOPIC_LIST+req.AccessToken, list...)
+	if err != nil {
+		logrus.Error("lpush redis error :", err)
+		return nil, err
 	}
 	return getTopicByIndex(common.TOPIC_LIST, req.AccessToken, 0)
 }
@@ -224,6 +224,10 @@ func GetAnalysis(openId string, topicId int) (*Analysis, error) {
 	anlysis.TopicAnalysis = topic.TopicAnalysis
 	anlysis.WrongNum = topic.WrongNum
 	anlysis.RightNum = topic.RightNum
+	anlysis.Year = topic.Year
+	anlysis.ElementArr = make([]string, 0)
+	anlysis.ElementArr = append(anlysis.ElementArr, topic.ExamType)
+	anlysis.ElementArr = append(anlysis.ElementArr, topic.ElementTypeOne)
 	return anlysis, nil
 }
 func Collect(openId string, topicId int) error {

@@ -44,6 +44,14 @@ func GetWrongTopics(openId string) ([]WrongTopic, error) {
 	return topics, nil
 }
 
+func GetWrongTopicsId(openId string) ([]int, error) {
+	var topicIds []int
+	data := make(map[string]interface{})
+	data["open_id"] = openId
+	db.Model(&WrongTopic{}).Where(data).Pluck("topic_id", topicIds)
+	return topicIds, nil
+}
+
 func GetWrongTopic(openId string) (*WrongTopic, error) {
 	var (
 		topic WrongTopic

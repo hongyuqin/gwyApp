@@ -1,6 +1,6 @@
 tips:
   1.除了第一个接口，其他接口都要带上accessToken用作鉴权
-gg 1.首页
+1.首页
 url:/home
 请求方式：GET
 请求参数：accessToken=xxx
@@ -22,7 +22,7 @@ url:/home
     }
 }
 
-gg* 2.开始答题/下一题
+gg 2.开始答题/下一题
 功能：把今天答得题存下来，有个今天刷题 需要展示
 url:/nextTopic?accessToken=xxx&is_begin=true&current_index=10&operate=last
 请求方式：GET
@@ -46,7 +46,7 @@ url:/nextTopic?accessToken=xxx&is_begin=true&current_index=10&operate=last
     }
 }
 
-gg 3.下一道错题
+3.下一道错题
 功能：做下一道错题
 url:/nextWrongTopic?accessToken=xxx&isBegin=true&currentIndex=10&operate=last
 请求方式：GET
@@ -70,7 +70,7 @@ url:/nextWrongTopic?accessToken=xxx&isBegin=true&currentIndex=10&operate=last
     }
 }
 
-gg 4.下一道收藏的题
+4.下一道收藏的题
 url:/nextCollect?accessToken=xxx&isBegin=true&currentIndex=10&operate=last
 请求方式：GET
 请求参数：
@@ -93,7 +93,7 @@ url:/nextCollect?accessToken=xxx&isBegin=true&currentIndex=10&operate=last
     }
 }
 
-gg 5.提交答案
+5.提交答案
 功能：提交答案，显示正确答案和解析，还有正不正确
 url:/answer?accessToken=xxx&topic_id=xx&my_answer=C
 请求方式:GET
@@ -114,7 +114,7 @@ url:/answer?accessToken=xxx&topic_id=xx&my_answer=C
     }
 }
 
-6.设置要素轴
+gg 6.设置要素轴
 功能：
 url:/setting?accessToken=xxx&exam_type=xx&element_type_one=xx&element_type_two=xx
 请求方式：GET
@@ -124,7 +124,7 @@ url:/setting?accessToken=xxx&exam_type=xx&element_type_one=xx&element_type_two=x
     "msg": ""
 }
 
-gg 7.获取计划
+7.获取计划
 功能：点击修改计划，获取计划的信息
 url:/getPlan?accessToken=xxx&
 请求方式：GET
@@ -140,7 +140,7 @@ url:/getPlan?accessToken=xxx&
     }
 }
 
-gg 6.修改计划
+6.修改计划
 功能：通过此按钮调整——地域的选择（如国家，深圳，等后期再添加其他地方的题目）、参加考试的类型（如公务员考、事业单位考试）、今日刷题的数量。页面设计可以参考百词斩。
 url:/plan?accessToken=xxx&region=xx&exam_type=xx&daily_need_num=xx
 请求方式：GET
@@ -173,7 +173,7 @@ url:/cancelCollect?accessToken=xxx&topic_id=xx
     "msg": ""
 }
 
-10.查看解析
+gg 10.查看解析
 url:/getAnalysis?accessToken=xxx&topic_id=xx
 请求方式:GET
 请求参数：

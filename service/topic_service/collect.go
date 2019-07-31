@@ -6,7 +6,6 @@ import (
 	"gwyApp/common"
 	"gwyApp/models"
 	"gwyApp/pkg/gredis"
-	"strconv"
 )
 
 type TopicReq struct {
@@ -17,7 +16,7 @@ type TopicReq struct {
 }
 
 func getBeginCollect(req *TopicReq) (*Topic, error) {
-	collects, err := models.GetCollects(req.AccessToken)
+	collectsId, err := models.GetCollectsId(req.AccessToken)
 	if err != nil {
 		logrus.Error("GetCollects error :", err)
 		return nil, err
@@ -27,12 +26,10 @@ func getBeginCollect(req *TopicReq) (*Topic, error) {
 		logrus.Error("delete error :", err)
 		return nil, err
 	}
-	for _, collect := range collects {
-		_, err = gredis.RPush(common.COLLECT_LIST+req.AccessToken, strconv.Itoa(collect.TopicId))
-		if err != nil {
-			logrus.Error("lpush redis error :", err)
-			return nil, err
-		}
+	_, err = gredis.RPush(common.COLLECT_LIST+req.AccessToken, collectsId...)
+	if err != nil {
+		logrus.Error("lpush redis error :", err)
+		return nil, err
 	}
 	return getTopicByIndex(common.COLLECT_LIST, req.AccessToken, 0)
 }

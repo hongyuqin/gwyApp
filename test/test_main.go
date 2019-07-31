@@ -46,8 +46,19 @@ func testRegex() {
 
 //字符串截取
 
+//传入参数为列表 怎么转为字符串
+func printArr(m ...int) {
+	fmt.Println("m is :", m)
+}
+func testArr() {
+	list := make([]int, 0)
+	list = append(list, 100)
+	list = append(list, 200)
+	printArr(list...)
+}
 func main() {
+	testArr()
 	/*str := []rune("第一部分 常识判断")
 	fmt.Println(string(str[5:]))*/
-	testRegex()
+	//testRegex()
 }

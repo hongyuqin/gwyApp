@@ -5,7 +5,6 @@ import (
 	"github.com/gomodule/redigo/redis"
 	"github.com/sirupsen/logrus"
 	"gwyApp/pkg/setting"
-	"strconv"
 	"time"
 )
 
@@ -168,17 +167,26 @@ func LPush(key, value string) (int, error) {
 
 	return redis.Int(conn.Do("LPUSH", key, value))
 }
-func RPush(key, value string) (int, error) {
+func RPush(key string, value ...int) (int, error) {
 	conn := RedisConn.Get()
 	defer conn.Close()
-
-	return redis.Int(conn.Do("RPUSH", key, value))
+	//这里一个个插入
+	//TODO:怎么用一条语句解决
+	i := 0
+	for _, v := range value {
+		i++
+		_, err := redis.Int(conn.Do("RPUSH", key, v))
+		if err != nil {
+			return 0, err
+		}
+	}
+	return i, nil
 }
 func LIndex(key string, index int) (int, error) {
 	conn := RedisConn.Get()
 	defer conn.Close()
 
-	return redis.Int(conn.Do("LINDEX", key, strconv.Itoa(index)))
+	return redis.Int(conn.Do("LINDEX", key, index))
 }
 func LLen(key string) (int, error) {
 	conn := RedisConn.Get()

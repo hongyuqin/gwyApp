@@ -43,19 +43,12 @@ func GetCollect(openId string) (*Collect, error) {
 	}
 	return &collect, nil
 }
-func GetCollects(openId string) ([]Collect, error) {
-	var (
-		collects []Collect
-		err      error
-	)
+func GetCollectsId(openId string) ([]int, error) {
+	var topicIds []int
 	data := make(map[string]interface{})
 	data["open_id"] = openId
-
-	err = db.Where(data).Find(&collects).Error
-	if err != nil {
-		return nil, err
-	}
-	return collects, nil
+	db.Model(&Collect{}).Where(data).Pluck("topic_id", topicIds)
+	return topicIds, nil
 }
 func ExistCollect(openId string, topicId int) (bool, error) {
 	count := 0
