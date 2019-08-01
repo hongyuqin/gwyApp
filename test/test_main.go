@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/sirupsen/logrus"
 	"regexp"
+	"time"
 )
 
 /**
@@ -56,8 +57,21 @@ func testArr() {
 	list = append(list, 200)
 	printArr(list...)
 }
+func test() {
+	goLiveTime, er := time.Parse(time.RFC3339, "2019-07-31T23:40:00+08:00")
+	if er != nil {
+		fmt.Println(er)
+		return
+	}
+	curTime := time.Now().In(time.FixedZone("CST", 8*60*60))
+	if curTime.Before(goLiveTime) {
+		fmt.Println("before")
+	}
+	fmt.Println("after")
+}
 func main() {
-	testArr()
+	test()
+	//testArr()
 	/*str := []rune("第一部分 常识判断")
 	fmt.Println(string(str[5:]))*/
 	//testRegex()
