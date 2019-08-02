@@ -9,6 +9,7 @@ require (
 	github.com/gorilla/schema v1.1.0
 	github.com/jinzhu/gorm v1.9.10
 	github.com/kr/pretty v0.1.0 // indirect
+	github.com/nsqio/go-nsq v1.0.7
 	github.com/sirupsen/logrus v1.2.0
 	github.com/smartystreets/goconvey v0.0.0-20190710185942-9d28bd7c0945 // indirect
 	github.com/unidoc/unioffice v1.2.0
