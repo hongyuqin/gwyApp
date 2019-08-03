@@ -29,7 +29,13 @@ func (f MyTextFormatter) Format(entry *logrus.Entry) ([]byte, error) {
 }
 func setUpLog() {
 	logrus.SetFormatter(&MyTextFormatter{})
-	logrus.SetOutput(os.Stdout)
+	file, err := os.OpenFile("logrus.log", os.O_CREATE|os.O_WRONLY, 0666)
+	if err == nil {
+		logrus.SetOutput(file)
+	} else {
+		logrus.Info("Failed to log to file")
+	}
+
 	logrus.SetLevel(logrus.DebugLevel)
 }
 func SetUp() {
@@ -38,12 +44,12 @@ func SetUp() {
 	if err != nil {
 		log.Fatalf("setting.Setup, fail to parse 'conf/app.ini': %v", err)
 	}
+	setUpLog()
 	mapTo("app", AppSetting)
 	mapTo("server", ServerSetting)
 	mapTo("database", DatabaseSetting)
 	mapTo("redis", RedisSetting)
 	mapTo("wechat", WeChatSetting)
-	setUpLog()
 }
 
 type Database struct {
