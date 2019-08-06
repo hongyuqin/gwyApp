@@ -69,8 +69,15 @@ func test() {
 	}
 	fmt.Println("after")
 }
+func testDocker() {
+	for {
+		fmt.Println("Hello world")
+		time.Sleep(time.Second * 10)
+	}
+}
 func main() {
-	test()
+	testDocker()
+	//test()
 	//testArr()
 	/*str := []rune("第一部分 常识判断")
 	fmt.Println(string(str[5:]))*/

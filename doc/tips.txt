@@ -32,3 +32,24 @@ that.setData({
 
 17.目前只做国考
 
+18.启动：
+ a.先启动docker-compose.yml
+ b.再启动gwyApp : docker run --name gwyApp --network mysql_network -p 8000:8000 gwy_app
+ c.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

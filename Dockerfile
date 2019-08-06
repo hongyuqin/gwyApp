@@ -4,8 +4,6 @@ FROM golang:latest
 LABEL maintainer="Nick Hong <nick.hong@klook.com>"
 
 RUN mkdir /app
-RUN export GO111MODULE=on
-RUN export GOPROXY=https://goproxy.io
 # Set the Current Working Directory inside the container
 WORKDIR /app
 
@@ -13,10 +11,10 @@ WORKDIR /app
 COPY . .
 
 # Build the Go app
-RUN export GOPROXY=https://goproxy.io && go build
+RUN export GO15VENDOREXPERIMENT=1 && export GO111MODULE=on && export GOPROXY=https://goproxy.io && go build
 
 # Expose port 8080 to the outside world
 EXPOSE 8000
 
 # Command to run the executable
-CMD ["./main"]
+CMD ["./gwyApp"]
